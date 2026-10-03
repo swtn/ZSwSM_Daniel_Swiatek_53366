@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1900"><rect width="100%" height="100%" fill="white"/>
+<polyline points="530,150 665,150" fill="none" stroke="black" stroke-width="2"/>
+<text x="548" y="133" font-family="Arial" font-size="26">1</text>
+<text x="620" y="133" font-family="Arial" font-size="26">1</text>
+<polyline points="1095,150 1240,150" fill="none" stroke="black" stroke-width="2"/>
+<text x="1110" y="130" font-family="Arial" font-size="26">1</text>
+<text x="1160" y="130" font-family="Arial" font-size="26">1..*</text>
+<polyline points="1450,275 1450,390" fill="none" stroke="black" stroke-width="2"/>
+<text x="1465" y="323" font-family="Arial" font-size="26">0..*</text>
+<text x="1465" y="377" font-family="Arial" font-size="26">1</text>
+<polyline points="795,285 795,380 450,380 450,460" fill="none" stroke="black" stroke-width="2"/>
+<text x="805" y="332" font-family="Arial" font-size="26">1</text>
+<text x="460" y="430" font-family="Arial" font-size="26">0..*</text>
+<polyline points="970,285 970,460" fill="none" stroke="black" stroke-width="2"/>
+<text x="980" y="345" font-family="Arial" font-size="26">1</text>
+<text x="980" y="432" font-family="Arial" font-size="26">0..*</text>
+<polyline points="650,730 690,730 690,805 1210,805 1210,480 1240,480" fill="none" stroke="black" stroke-width="2"/>
+<text x="655" y="720" font-family="Arial" font-size="26">0..*</text>
+<text x="760" y="795" font-family="Arial" font-size="26">źródłowa / docelowa: 1</text>
+<polyline points="1170,560 1215,560 1215,515 1240,515" fill="none" stroke="black" stroke-width="2"/>
+<text x="1180" y="675" font-family="Arial" font-size="26">waluta: 1</text>
+<rect x="100" y="75" width="430" height="191" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="110" font-family="Arial" font-size="26" font-weight="bold">Użytkownik</text>
+<polyline points="100,125 530,125" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="158" font-family="Arial" font-size="26">- id: UUID</text>
+<text x="112" y="192" font-family="Arial" font-size="26">- email: String</text>
+<text x="112" y="226" font-family="Arial" font-size="26">- skrotHasla: String</text>
+<text x="112" y="260" font-family="Arial" font-size="26">- dataUtworzenia: DateTime</text>
+<rect x="665" y="75" width="430" height="202" fill="none" stroke="black" stroke-width="2"/>
+<text x="677" y="110" font-family="Arial" font-size="26" font-weight="bold">Portfel</text>
+<polyline points="665,125 1095,125" fill="none" stroke="black" stroke-width="2"/>
+<text x="677" y="158" font-family="Arial" font-size="26">- id: UUID</text>
+<text x="677" y="192" font-family="Arial" font-size="26">- uzytkownikId: UUID</text>
+<polyline points="665,201 1095,201" fill="none" stroke="black" stroke-width="2"/>
+<text x="677" y="236" font-family="Arial" font-size="26">+ pobierzSalda()</text>
+<rect x="1240" y="75" width="450" height="157" fill="none" stroke="black" stroke-width="2"/>
+<text x="1252" y="110" font-family="Arial" font-size="26" font-weight="bold">SaldoWaluty</text>
+<polyline points="1240,125 1690,125" fill="none" stroke="black" stroke-width="2"/>
+<text x="1252" y="158" font-family="Arial" font-size="26">- id: UUID</text>
+<text x="1252" y="192" font-family="Arial" font-size="26">- kodWaluty: String</text>
+<text x="1252" y="226" font-family="Arial" font-size="26">- kwota: Decimal</text>
+<rect x="1240" y="390" width="450" height="123" fill="none" stroke="black" stroke-width="2"/>
+<text x="1252" y="425" font-family="Arial" font-size="26" font-weight="bold">Waluta</text>
+<polyline points="1240,440 1690,440" fill="none" stroke="black" stroke-width="2"/>
+<text x="1252" y="473" font-family="Arial" font-size="26">- kod: String</text>
+<text x="1252" y="507" font-family="Arial" font-size="26">- nazwa: String</text>
+<rect x="100" y="460" width="550" height="293" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="495" font-family="Arial" font-size="26" font-weight="bold">TransakcjaWymiany</text>
+<polyline points="100,510 650,510" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="543" font-family="Arial" font-size="26">- id: UUID</text>
+<text x="112" y="577" font-family="Arial" font-size="26">- rodzaj: RodzajWymiany</text>
+<text x="112" y="611" font-family="Arial" font-size="26">- kwotaZrodlowa: Decimal</text>
+<text x="112" y="645" font-family="Arial" font-size="26">- kwotaDocelowa: Decimal</text>
+<text x="112" y="679" font-family="Arial" font-size="26">- zastosowanyKurs: Decimal</text>
+<text x="112" y="713" font-family="Arial" font-size="26">- dataCzas: DateTime</text>
+<text x="112" y="747" font-family="Arial" font-size="26">- identyfikatorZadania: UUID</text>
+<rect x="740" y="460" width="430" height="191" fill="none" stroke="black" stroke-width="2"/>
+<text x="752" y="495" font-family="Arial" font-size="26" font-weight="bold">Zasilenie</text>
+<polyline points="740,510 1170,510" fill="none" stroke="black" stroke-width="2"/>
+<text x="752" y="543" font-family="Arial" font-size="26">- id: UUID</text>
+<text x="752" y="577" font-family="Arial" font-size="26">- kwota: Decimal</text>
+<text x="752" y="611" font-family="Arial" font-size="26">- dataCzas: DateTime</text>
+<text x="752" y="645" font-family="Arial" font-size="26">- identyfikatorZadania: UUID</text>
+<text x="100" y="870" font-family="Arial" font-size="26" font-weight="bold">Usługi i obiekty tymczasowe</text>
+<polyline points="686.8362615716444,1047.1913830790631 700,1040 686.8362615716444,1032.8086169209369" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="1250,1040 1350,1040" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 5"/>
+<polyline points="1336.8362615716444,1047.1913830790631 1350,1040 1336.8362615716444,1032.8086169209369" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="1500,1240 1500,1350" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 5"/>
+<polyline points="1492.8086169209369,1336.8362615716444 1500,1350 1507.1913830790631,1336.8362615716444" fill="none" stroke="black" stroke-width="2"/>
+<text x="1520" y="1295" font-family="Arial" font-size="26">zwraca</text>
+<polyline points="940,940 940,860 850,860 850,285" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 5"/>
+<polyline points="857.191383079063,298.1637384283556 850,285 842.808616920937,298.1637384283556" fill="none" stroke="black" stroke-width="2"/>
+<text x="950" y="885" font-family="Arial" font-size="26">operuje na portfelu</text>
+<polyline points="620,1510 690,1510 690,300 720,300 720,285" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 5"/>
+<polyline points="727.191383079063,298.1637384283556 720,285 712.808616920937,298.1637384283556" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="300,1200 300,1300 65,1300 65,150 100,150" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 5"/>
+<polyline points="86.83626157164441,157.19138307906306 100,150 86.83626157164441,142.80861692093694" fill="none" stroke="black" stroke-width="2"/>
+<rect x="100" y="940" width="460" height="270" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="975" font-family="Arial" font-size="26" font-weight="bold">SerwisUwierzytelniania</text>
+<polyline points="100,990 560,990" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="1023" font-family="Arial" font-size="26">«service»</text>
+<polyline points="100,1032 560,1032" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="1067" font-family="Arial" font-size="26">+ zarejestruj()</text>
+<text x="112" y="1101" font-family="Arial" font-size="26">+ zaloguj()</text>
+<text x="112" y="1135" font-family="Arial" font-size="26">+ wyloguj()</text>
+<text x="112" y="1169" font-family="Arial" font-size="26">+ sprawdzSesje()</text>
+<rect x="700" y="940" width="550" height="270" fill="none" stroke="black" stroke-width="2"/>
+<text x="712" y="975" font-family="Arial" font-size="26" font-weight="bold">SerwisWymiany</text>
+<polyline points="700,990 1250,990" fill="none" stroke="black" stroke-width="2"/>
+<text x="712" y="1023" font-family="Arial" font-size="26">«service»</text>
+<polyline points="700,1032 1250,1032" fill="none" stroke="black" stroke-width="2"/>
+<text x="712" y="1067" font-family="Arial" font-size="26">+ kupWalute()</text>
+<text x="712" y="1101" font-family="Arial" font-size="26">+ sprzedajWalute()</text>
+<text x="712" y="1135" font-family="Arial" font-size="26">+ sprawdzSrodki()</text>
+<text x="712" y="1169" font-family="Arial" font-size="26">+ obliczWynik()</text>
+<rect x="1350" y="940" width="350" height="168" fill="none" stroke="black" stroke-width="2"/>
+<text x="1362" y="975" font-family="Arial" font-size="26" font-weight="bold">KlientNBP</text>
+<polyline points="1350,990 1700,990" fill="none" stroke="black" stroke-width="2"/>
+<text x="1362" y="1023" font-family="Arial" font-size="26">- adresAPI: String</text>
+<polyline points="1350,1032 1700,1032" fill="none" stroke="black" stroke-width="2"/>
+<text x="1362" y="1067" font-family="Arial" font-size="26">+ pobierzKurs()</text>
+<rect x="100" y="1400" width="520" height="202" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="1435" font-family="Arial" font-size="26" font-weight="bold">SerwisPortfela</text>
+<polyline points="100,1450 620,1450" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="1483" font-family="Arial" font-size="26">«service»</text>
+<polyline points="100,1492 620,1492" fill="none" stroke="black" stroke-width="2"/>
+<text x="112" y="1527" font-family="Arial" font-size="26">+ pobierzSalda()</text>
+<text x="112" y="1561" font-family="Arial" font-size="26">+ zasilPortfel()</text>
+<rect x="1180" y="1350" width="520" height="225" fill="none" stroke="black" stroke-width="2"/>
+<text x="1192" y="1385" font-family="Arial" font-size="26" font-weight="bold">KursBieżący</text>
+<polyline points="1180,1400 1700,1400" fill="none" stroke="black" stroke-width="2"/>
+<text x="1192" y="1433" font-family="Arial" font-size="26">«transient»</text>
+<text x="1192" y="1467" font-family="Arial" font-size="26">- kodWaluty: String</text>
+<text x="1192" y="1501" font-family="Arial" font-size="26">- kursKupna: Decimal</text>
+<text x="1192" y="1535" font-family="Arial" font-size="26">- kursSprzedazy: Decimal</text>
+<text x="1192" y="1569" font-family="Arial" font-size="26">- dataPublikacji: Date</text>
+<text x="100" y="1765" font-family="Arial" font-size="26">UUID — identyfikator; Decimal — dokładna wartość dziesiętna.</text>
+<text x="100" y="1805" font-family="Arial" font-size="26">KursBieżący istnieje tylko podczas obsługi żądania i nie jest utrwalany.</text>
+</svg>

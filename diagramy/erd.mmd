@@ -1,0 +1,49 @@
+erDiagram
+    uzytkownicy {
+        uuid id PK
+        string email
+        string skrot_hasla
+        timestamp data_utworzenia
+    }
+    portfele {
+        uuid id PK
+        uuid uzytkownik_id FK
+    }
+    waluty {
+        string kod PK
+        string nazwa
+    }
+    salda_walut {
+        uuid id PK
+        uuid portfel_id FK
+        string kod_waluty FK
+        decimal kwota
+    }
+    transakcje_wymiany {
+        uuid id PK
+        uuid portfel_id FK
+        string rodzaj
+        string waluta_zrodlowa FK
+        string waluta_docelowa FK
+        decimal kwota_zrodlowa
+        decimal kwota_docelowa
+        decimal zastosowany_kurs
+        timestamp data_czas
+        uuid identyfikator_zadania
+    }
+    zasilenia {
+        uuid id PK
+        uuid portfel_id FK
+        string kod_waluty FK
+        decimal kwota
+        timestamp data_czas
+        uuid identyfikator_zadania
+    }
+    uzytkownicy ||--|| portfele : posiada
+    portfele ||--|{ salda_walut : zawiera
+    waluty ||--o{ salda_walut : okresla
+    portfele ||--o{ transakcje_wymiany : ma
+    portfele ||--o{ zasilenia : ma
+    waluty ||--o{ transakcje_wymiany : zrodlowa
+    waluty ||--o{ transakcje_wymiany : docelowa
+    waluty ||--o{ zasilenia : okresla

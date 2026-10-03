@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1300" viewBox="0 0 1500 1300"><rect width="100%" height="100%" fill="white"/>
+<rect x="250" y="40" width="990" height="1200" fill="none" stroke="black" stroke-width="2"/>
+<text x="745" y="83" text-anchor="middle" font-family="Arial" font-size="23">System mobilny kantoru wymiany walut</text>
+<polyline points="120,200 330,160" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,200 330,260" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,800 330,400" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,800 330,500" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,800 330,600" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,800 330,740" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,800 330,890" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,800 330,1050" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,800 330,1150" fill="none" stroke="black" stroke-width="2"/>
+<circle cx="120" cy="152" r="17" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,169 120,225" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="85,190 155,190" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="92,265 120,225 148,265" fill="none" stroke="black" stroke-width="2"/>
+<text x="120" y="303" text-anchor="middle" font-family="Arial" font-size="23">Gość</text>
+<circle cx="120" cy="752" r="17" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="120,769 120,825" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="85,790 155,790" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="92,865 120,825 148,865" fill="none" stroke="black" stroke-width="2"/>
+<text x="120" y="903" text-anchor="middle" font-family="Arial" font-size="23">Zalogowany</text>
+<text x="120" y="931" text-anchor="middle" font-family="Arial" font-size="23">użytkownik</text>
+<circle cx="1370" cy="352" r="17" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="1370,369 1370,425" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="1335,390 1405,390" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="1342,465 1370,425 1398,465" fill="none" stroke="black" stroke-width="2"/>
+<text x="1370" y="503" text-anchor="middle" font-family="Arial" font-size="23">API NBP</text>
+<polyline points="670,600 760,600 760,430 850,430" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 6"/>
+<polyline points="837.3937405670625,436.08951747755725 850,430 837.3937405670625,423.91048252244275" fill="none" stroke="black" stroke-width="2"/>
+<text x="754" y="578" text-anchor="middle" font-family="Arial" font-size="20">«include»</text>
+<polyline points="670,720 795,720 795,430 850,430" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 6"/>
+<polyline points="837.3937405670625,436.08951747755725 850,430 837.3937405670625,423.91048252244275" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="670,740 850,790" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 6"/>
+<polyline points="836.223821276637,792.4933711681097 850,790 839.4834652492098,780.7586528668478" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="670,760 810,760 810,980 850,980" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 6"/>
+<polyline points="837.3937405670625,986.0895174775573 850,980 837.3937405670625,973.9104825224427" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="670,870 795,870 795,430 850,430" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 6"/>
+<polyline points="837.3937405670625,436.08951747755725 850,430 837.3937405670625,423.91048252244275" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="670,890 850,790" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 6"/>
+<polyline points="841.9374777092863,801.445336793286 850,790 836.0228154747575,790.7989447711341" fill="none" stroke="black" stroke-width="2"/>
+<polyline points="670,910 810,910 810,980 850,980" fill="none" stroke="black" stroke-width="2" stroke-dasharray="8 6"/>
+<polyline points="837.3937405670625,986.0895174775573 850,980 837.3937405670625,973.9104825224427" fill="none" stroke="black" stroke-width="2"/>
+<text x="730" y="704" text-anchor="middle" font-family="Arial" font-size="20">«include»</text>
+<text x="733" y="857" text-anchor="middle" font-family="Arial" font-size="20">«include»</text>
+<text x="755" y="960" text-anchor="middle" font-family="Arial" font-size="20">«include»</text>
+<polyline points="1190,430 1335,390" fill="none" stroke="black" stroke-width="2"/>
+<ellipse cx="500" cy="160" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="168" text-anchor="middle" font-family="Arial" font-size="23">Rejestracja</text>
+<ellipse cx="500" cy="260" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="268" text-anchor="middle" font-family="Arial" font-size="23">Logowanie</text>
+<ellipse cx="500" cy="400" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="408" text-anchor="middle" font-family="Arial" font-size="23">Wylogowanie</text>
+<ellipse cx="500" cy="500" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="508" text-anchor="middle" font-family="Arial" font-size="23">Zasilenie konta</text>
+<ellipse cx="500" cy="600" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="594" text-anchor="middle" font-family="Arial" font-size="23">Podgląd bieżących</text>
+<text x="500" y="622" text-anchor="middle" font-family="Arial" font-size="23">kursów</text>
+<ellipse cx="500" cy="740" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="748" text-anchor="middle" font-family="Arial" font-size="23">Kupno waluty</text>
+<ellipse cx="500" cy="890" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="898" text-anchor="middle" font-family="Arial" font-size="23">Sprzedaż waluty</text>
+<ellipse cx="500" cy="1050" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="1058" text-anchor="middle" font-family="Arial" font-size="23">Podgląd portfela</text>
+<ellipse cx="500" cy="1150" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="500" y="1158" text-anchor="middle" font-family="Arial" font-size="23">Historia transakcji</text>
+<ellipse cx="1020" cy="430" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="1020" y="424" text-anchor="middle" font-family="Arial" font-size="23">Pobranie bieżącego</text>
+<text x="1020" y="452" text-anchor="middle" font-family="Arial" font-size="23">kursu z NBP</text>
+<ellipse cx="1020" cy="790" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="1020" y="798" text-anchor="middle" font-family="Arial" font-size="23">Walidacja operacji</text>
+<ellipse cx="1020" cy="980" rx="170" ry="43" fill="white" stroke="black" stroke-width="2"/>
+<text x="1020" y="974" text-anchor="middle" font-family="Arial" font-size="23">Zapis wymiany</text>
+<text x="1020" y="1002" text-anchor="middle" font-family="Arial" font-size="23">i aktualizacja sald</text>
+</svg>

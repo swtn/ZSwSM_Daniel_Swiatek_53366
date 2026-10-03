@@ -1,0 +1,78 @@
+@startuml
+hide empty members
+class Użytkownik {
+-id: UUID
+-email: String
+-skrotHasla: String
+-dataUtworzenia: DateTime
+}
+class Portfel {
+-id: UUID
+-uzytkownikId: UUID
++pobierzSalda()
+}
+class SaldoWaluty {
+-id: UUID
+-kodWaluty: String
+-kwota: Decimal
+}
+class Waluta {
+-kod: String
+-nazwa: String
+}
+class TransakcjaWymiany {
+-id: UUID
+-rodzaj: RodzajWymiany
+-kwotaZrodlowa: Decimal
+-kwotaDocelowa: Decimal
+-zastosowanyKurs: Decimal
+-dataCzas: DateTime
+-identyfikatorZadania: UUID
+}
+class Zasilenie {
+-id: UUID
+-kwota: Decimal
+-dataCzas: DateTime
+-identyfikatorZadania: UUID
+}
+class SerwisUwierzytelniania <<service>> {
++zarejestruj()
++zaloguj()
++wyloguj()
++sprawdzSesje()
+}
+class SerwisPortfela <<service>> {
++pobierzSalda()
++zasilPortfel()
+}
+class SerwisWymiany <<service>> {
++kupWalute()
++sprzedajWalute()
++sprawdzSrodki()
++obliczWynik()
+}
+class KlientNBP {
+-adresAPI: String
++pobierzKurs()
+}
+class KursBieżący <<transient>> {
+-kodWaluty: String
+-kursKupna: Decimal
+-kursSprzedazy: Decimal
+-dataPublikacji: Date
+}
+Użytkownik "1" -- "1" Portfel
+Portfel "1" -- "1..*" SaldoWaluty
+SaldoWaluty "0..*" -- "1" Waluta
+Portfel "1" -- "0..*" TransakcjaWymiany
+Portfel "1" -- "0..*" Zasilenie
+TransakcjaWymiany "0..*" -- "1" Waluta : źródłowa
+TransakcjaWymiany "0..*" -- "1" Waluta : docelowa
+Zasilenie "0..*" -- "1" Waluta
+SerwisUwierzytelniania ..> Użytkownik
+SerwisPortfela ..> Portfel
+SerwisWymiany ..> Portfel
+SerwisWymiany ..> KlientNBP
+KlientNBP ..> KursBieżący : zwraca
+note bottom of KursBieżący : Obiekt tymczasowy bez trwałego zapisu
+@enduml

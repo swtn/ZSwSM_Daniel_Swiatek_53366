@@ -1,0 +1,4 @@
+flowchart LR
+ A[Aplikacja mobilna] <-->|HTTPS / JSON| S[Web Service REST]
+ S <-->|Transakcje SQL| D[(Baza danych)]
+ S <-->|HTTPS / JSON| N[API NBP]

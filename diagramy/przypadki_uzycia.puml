@@ -1,0 +1,37 @@
+@startuml
+left to right direction
+actor "Gość" as Guest
+actor "Zalogowany użytkownik" as User
+actor "API NBP" as NBP
+rectangle "System mobilny kantoru wymiany walut" {
+usecase "Rejestracja" as Register
+usecase "Logowanie" as Login
+usecase "Wylogowanie" as Logout
+usecase "Zasilenie konta" as Deposit
+usecase "Podgląd bieżących kursów" as Rates
+usecase "Kupno waluty" as Buy
+usecase "Sprzedaż waluty" as Sell
+usecase "Podgląd portfela" as Wallet
+usecase "Historia transakcji" as History
+usecase "Pobranie bieżącego kursu z NBP" as Fetch
+usecase "Walidacja operacji" as Validate
+usecase "Zapis wymiany i aktualizacja sald" as Record
+}
+Guest -- Register
+Guest -- Login
+User -- Logout
+User -- Deposit
+User -- Rates
+User -- Buy
+User -- Sell
+User -- Wallet
+User -- History
+Rates ..> Fetch : <<include>>
+Buy ..> Fetch : <<include>>
+Sell ..> Fetch : <<include>>
+Buy ..> Validate : <<include>>
+Sell ..> Validate : <<include>>
+Buy ..> Record : <<include>>
+Sell ..> Record : <<include>>
+NBP -- Fetch
+@enduml
