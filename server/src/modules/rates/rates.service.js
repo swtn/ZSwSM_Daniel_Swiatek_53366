@@ -21,16 +21,26 @@ const tableSchema = z.array(
   })
 ).length(1);
 
-export async function getCurrentRates() {
+async function fetchRates(date) {
+  const url = date
+    ? `https://api.nbp.pl/api/exchangerates/tables/C/${date}/?format=json`
+    : "https://api.nbp.pl/api/exchangerates/tables/C/?format=json";
   const response = await fetch(
-    "https://api.nbp.pl/api/exchangerates/tables/C/?format=json",
+    url,
     {
       headers: {
         Accept: "application/json",
       },
+      cache: "no-store",
       signal: AbortSignal.timeout(5000),
     }
   );
+
+  if (date && response.status === 404) {
+    const error = new Error("Brak tabeli NBP dla wybranej daty.");
+    error.code = "RATES_NOT_FOUND";
+    throw error;
+  }
 
   if (!response.ok) {
     throw new Error(`API NBP zwróciło status ${response.status}.`);
@@ -65,4 +75,12 @@ export async function getCurrentRates() {
     baseCurrency: "PLN",
     rates,
   };
+}
+
+export function getCurrentRates() {
+  return fetchRates();
+}
+
+export function getHistoricalRates(date) {
+  return fetchRates(date);
 }

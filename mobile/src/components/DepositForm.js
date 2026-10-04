@@ -1,10 +1,11 @@
+import { decimal } from "../i18n/translations.js";
+import { Text } from "../i18n/LanguageProvider.js";
+import { t } from "../i18n/translations.js";
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Button,
   Keyboard,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
@@ -14,7 +15,7 @@ import {
   submitDeposit,
 } from "../services/deposit-service.js";
 import AppButton from "./AppButton.js";
-import { theme } from "../theme/theme.js";
+import { useTheme, useThemedStyles } from "../theme/ThemeProvider.js";
 
 export default function DepositForm({
   session,
@@ -22,6 +23,8 @@ export default function DepositForm({
   onDeposited,
   onBusyChange,
 }) {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [amount, setAmount] = useState("");
   const [pending, setPending] = useState(null);
   const [ready, setReady] = useState(false);
@@ -48,7 +51,7 @@ export default function DepositForm({
       setPending(saved);
 
       if (saved) {
-        setAmount(saved.amount.replace(".", ","));
+        setAmount(decimal(saved.amount));
       }
 
       setReady(true);
@@ -78,7 +81,7 @@ export default function DepositForm({
       setPending(null);
       setAmount("");
       setMessage(
-        `Potwierdzono wpłatę ${deposit.amount.replace(".", ",")} PLN.`
+        `Potwierdzono wpłatę ${decimal(deposit.amount)} PLN.`
       );
 
       await onDeposited();
@@ -91,7 +94,7 @@ export default function DepositForm({
         setPending(saved);
 
         if (saved) {
-          setAmount(saved.amount.replace(".", ","));
+          setAmount(decimal(saved.amount));
         }
       } catch {
         setReady(false);
@@ -108,13 +111,16 @@ export default function DepositForm({
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Zasil portfel</Text>
-      <Text>Kwota wpłaty w PLN</Text>
+      <Text style={styles.notice}>Kwota wpłaty w PLN</Text>
 
       <TextInput
+            placeholderTextColor={theme.colors.muted}
+            selectionColor={theme.colors.primary}
+            keyboardAppearance={theme.dark ? "dark" : "light"}
         style={styles.input}
         value={amount}
         onChangeText={setAmount}
-        placeholder="np. 100,00"
+        placeholder={t("np. 100,00")}
         keyboardType="decimal-pad"
         editable={ready && !busy && !disabled && !pending}
       />
@@ -136,10 +142,10 @@ export default function DepositForm({
         <Text style={styles.success}>{message}</Text>
       )}
 
-      {busy && <ActivityIndicator />}
+      {busy && <ActivityIndicator color={theme.colors.primary} />}
 
       {ready ? (
-        <Button
+        <AppButton
           title={
             busy
               ? "Sprawdzanie wpłaty…"
@@ -151,7 +157,7 @@ export default function DepositForm({
           disabled={busy || disabled}
         />
       ) : (
-        <Button
+        <AppButton
           title="Odczytaj oczekującą wpłatę"
           onPress={restorePending}
           disabled={disabled}
@@ -161,7 +167,7 @@ export default function DepositForm({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     gap: 12,
     padding: 20,
@@ -173,22 +179,24 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    color: theme.colors.text,
   },
   input: {
+    backgroundColor: theme.colors.background,
     borderWidth: 1,
-    borderColor: "#94a3b8",
+    borderColor: theme.colors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    color: "#0f172a",
+    color: theme.colors.text,
   },
   notice: {
-    color: "#475569",
+    color: theme.colors.muted,
   },
   error: {
-    color: "#b91c1c",
+    color: theme.colors.danger,
   },
   success: {
-    color: "#166534",
+    color: theme.colors.success,
   },
 });

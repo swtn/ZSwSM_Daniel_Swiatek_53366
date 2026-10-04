@@ -1,40 +1,45 @@
-import { useCallback, useState } from "react";
+import { Text, useLanguage } from "../i18n/LanguageProvider.js";
+import { t } from "../i18n/translations.js";
 import {
-  RefreshControl,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import {
   DefaultTheme,
+  DarkTheme,
   NavigationContainer,
-  useFocusEffect,
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import WalletScreen from "../screens/WalletScreen.js";
+import AccountScreen from "../screens/AccountScreen.js";
+import HistoryScreen from "../screens/HistoryScreen.js";
+import HistoricalRatesScreen from "../screens/HistoricalRatesScreen.js";
 import RatesPanel from "../components/RatesPanel.js";
-import AppButton from "../components/AppButton.js";
-import { apiRequest } from "../services/api.js";
-import { theme } from "../theme/theme.js";
+import { useTheme, useThemedStyles } from "../theme/ThemeProvider.js";
 
 const Tab = createBottomTabNavigator();
 
-const navigationTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: theme.colors.primary,
-    background: theme.colors.background,
-    card: theme.colors.surface,
-    text: theme.colors.text,
-    border: theme.colors.border,
-  },
-};
+function createNavigationTheme(theme) {
+  const base = theme.dark ? DarkTheme : DefaultTheme;
+  return {
+    ...base,
+    dark: theme.dark,
+    colors: {
+      ...base.colors,
+      primary: theme.colors.primary,
+      background: theme.colors.background,
+      card: theme.colors.surface,
+      text: theme.colors.text,
+      border: theme.colors.border,
+    },
+  };
+}
 
 function Screen({ children }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <SafeAreaView style={styles.screen} edges={["top", "left", "right"]}>
       {children}
@@ -43,6 +48,7 @@ function Screen({ children }) {
 }
 
 function RatesScreen({ token }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.content}>
@@ -54,169 +60,10 @@ function RatesScreen({ token }) {
   );
 }
 
-function HistoryScreen({ token }) {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [reload, setReload] = useState(0);
-
-  useFocusEffect(
-    useCallback(() => {
-      let active = true;
-
-      async function loadHistory() {
-        setLoading(true);
-        setError("");
-
-        try {
-          const [deposits, exchanges] = await Promise.all([
-            apiRequest("/wallet/deposits", { token }),
-            apiRequest("/exchange/history", { token }),
-          ]);
-
-          const combined = [
-            ...deposits.deposits.map((item) => ({
-              ...item,
-              type: "deposit",
-            })),
-            ...exchanges.exchanges.map((item) => ({
-              ...item,
-              type: "exchange",
-            })),
-          ].sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-          );
-
-          if (active) {
-            setItems(combined);
-          }
-        } catch (error) {
-          if (active) {
-            setError(error.message);
-          }
-        } finally {
-          if (active) {
-            setLoading(false);
-          }
-        }
-      }
-
-      loadHistory();
-
-      return () => {
-        active = false;
-      };
-    }, [token, reload])
-  );
-
-  return (
-    <Screen>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        refreshControl={
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={() => setReload((value) => value + 1)}
-            tintColor={theme.colors.primary}
-            colors={[theme.colors.primary]}
-          />
-        }
-      >
-        <Text style={styles.title}>Historia</Text>
-        <Text style={styles.subtitle}>Ostatnie wpłaty i wymiany</Text>
-
-        {error !== "" && (
-          <View style={styles.card}>
-            <Text style={styles.error}>{error}</Text>
-            <AppButton
-              title="Spróbuj ponownie"
-              variant="secondary"
-              onPress={() => setReload((value) => value + 1)}
-              disabled={loading}
-            />
-          </View>
-        )}
-
-        {error !== "" && items.length > 0 && (
-          <Text style={styles.subtitle}>
-            Widoczne są ostatnio pobrane dane.
-          </Text>
-        )}
-
-        {!loading && !error && items.length === 0 && (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Brak operacji</Text>
-            <Text style={styles.subtitle}>
-              Twoje wpłaty i wymiany pojawią się tutaj.
-            </Text>
-          </View>
-        )}
-
-        {items.map((item) => (
-          <View key={`${item.type}-${item.id}`} style={styles.card}>
-            <Text style={styles.cardTitle}>
-              {item.type === "deposit"
-                ? "Zasilenie portfela"
-                : `${item.fromCurrency} → ${item.toCurrency}`}
-            </Text>
-
-            <Text style={styles.value}>
-              {item.type === "deposit"
-                ? `+${item.amount.replace(".", ",")} PLN`
-                : `${item.sourceAmount.replace(".", ",")} ${item.fromCurrency}
-→ ${item.targetAmount.replace(".", ",")} ${item.toCurrency}`}
-            </Text>
-
-            {item.type === "exchange" && (
-              <Text style={styles.subtitle}>
-                Kurs: {item.exchangeRate.replace(".", ",")} PLN
-                {"\n"}Tabela: {item.tableNumber}
-              </Text>
-            )}
-
-            <Text style={styles.date}>
-              {new Date(item.createdAt).toLocaleString("pl-PL")}
-            </Text>
-          </View>
-        ))}
-      </ScrollView>
-    </Screen>
-  );
-}
-
-function AccountScreen({ session, onLogout, logoutLoading, logoutError }) {
-  return (
-    <Screen>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Konto</Text>
-        <Text style={styles.subtitle}>Twoje dane i sesja</Text>
-
-        <View style={styles.card}>
-          <Ionicons
-            name="person-circle-outline"
-            size={48}
-            color={theme.colors.primary}
-          />
-          <Text style={styles.cardTitle}>Adres e-mail</Text>
-          <Text style={styles.value}>{session.user.email}</Text>
-        </View>
-
-        {logoutError !== "" && (
-          <Text style={styles.error}>{logoutError}</Text>
-        )}
-
-        <AppButton
-          title="Wyloguj się"
-          onPress={onLogout}
-          loading={logoutLoading}
-          variant="secondary"
-        />
-      </ScrollView>
-    </Screen>
-  );
-}
-
 export default function MainTabs(props) {
+  useLanguage();
+  const { theme } = useTheme();
+  const navigationTheme = createNavigationTheme(theme);
   const { session } = props;
 
   return (
@@ -225,6 +72,7 @@ export default function MainTabs(props) {
         <Tab.Navigator
           screenOptions={({ route }) => ({
             headerShown: false,
+            tabBarLabel: t(route.name),
             tabBarActiveTintColor: theme.colors.primary,
             tabBarInactiveTintColor: theme.colors.muted,
             tabBarHideOnKeyboard: true,
@@ -249,6 +97,7 @@ export default function MainTabs(props) {
               const icons = {
                 Portfel: focused ? "wallet" : "wallet-outline",
                 Kursy: focused ? "trending-up" : "trending-up-outline",
+                Archiwum: focused ? "calendar" : "calendar-outline",
                 Historia: focused ? "time" : "time-outline",
                 Konto: focused ? "person" : "person-outline",
               };
@@ -271,6 +120,10 @@ export default function MainTabs(props) {
             {() => <RatesScreen token={session.token} />}
           </Tab.Screen>
 
+          <Tab.Screen name="Archiwum">
+            {() => <HistoricalRatesScreen token={session.token} />}
+          </Tab.Screen>
+
           <Tab.Screen name="Historia">
             {() => <HistoryScreen token={session.token} />}
           </Tab.Screen>
@@ -284,7 +137,7 @@ export default function MainTabs(props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: theme.colors.background,

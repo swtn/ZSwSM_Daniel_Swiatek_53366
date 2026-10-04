@@ -7,6 +7,8 @@ import {
 } from "./auth.service.js";
 import { requireAuth } from "../../middleware/require-auth.js";
 
+import { getUserProfile } from "../users/users.service.js";
+
 const router = Router();
 
 router.post("/register", async (req, res) => {
@@ -74,13 +76,15 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/me", requireAuth, (req, res) => {
-  res.status(200).json({
-    user: {
-      id: req.auth.userId,
-      email: req.auth.email,
-    },
-  });
+router.get("/me", requireAuth, async (req, res) => {
+  try {
+    const profile = await getUserProfile(req.auth.userId);
+    if (!profile) return res.status(404).json({ error: "Nie znaleziono użytkownika." });
+    return res.json({ user: profile.user });
+  } catch (error) {
+    console.error("Błąd odczytu użytkownika:", error.code ?? error.name);
+    return res.status(500).json({ error: "Nie udało się pobrać danych użytkownika." });
+  }
 });
 
 router.post("/logout", requireAuth, async (req, res) => {

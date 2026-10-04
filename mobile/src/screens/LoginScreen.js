@@ -1,22 +1,28 @@
+import { Text } from "../i18n/LanguageProvider.js";
+import { t } from "../i18n/translations.js";
 import { useState } from "react";
 import {
   ActivityIndicator,
-  Button,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
 import { apiRequest } from "../services/api.js";
 import { saveToken } from "../services/token-storage.js";
 import AppButton from "../components/AppButton.js";
-import { theme } from "../theme/theme.js";
+import { useTheme, useThemedStyles } from "../theme/ThemeProvider.js";
 
-export default function LoginScreen({ onLogin }) {
-  const [email, setEmail] = useState("");
+export default function LoginScreen({
+  onLogin,
+  onRegister,
+  initialEmail = ""
+}) {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -71,12 +77,21 @@ export default function LoginScreen({ onLogin }) {
         <Text style={styles.subtitle}>Zaloguj się na swoje konto</Text>
 
         <View style={styles.form}>
+          <AppButton
+            title="Nie masz konta? Zarejestruj się"
+            variant="secondary"
+            onPress={onRegister}
+            disabled={loading}
+          />
           <Text style={styles.label}>Adres e-mail</Text>
           <TextInput
+            placeholderTextColor={theme.colors.muted}
+            selectionColor={theme.colors.primary}
+            keyboardAppearance={theme.dark ? "dark" : "light"}
             style={styles.input}
             value={email}
             onChangeText={setEmail}
-            placeholder="Adres e-mail"
+            placeholder={t("Adres e-mail")}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -86,10 +101,13 @@ export default function LoginScreen({ onLogin }) {
 
           <Text style={styles.label}>Hasło</Text>
           <TextInput
+            placeholderTextColor={theme.colors.muted}
+            selectionColor={theme.colors.primary}
+            keyboardAppearance={theme.dark ? "dark" : "light"}
             style={styles.input}
             value={password}
             onChangeText={setPassword}
-            placeholder="Hasło"
+            placeholder={t("Hasło")}
             secureTextEntry
             autoCapitalize="none"
             autoCorrect={false}
@@ -104,9 +122,9 @@ export default function LoginScreen({ onLogin }) {
             </Text>
           )}
 
-          {loading && <ActivityIndicator size="large" />}
+          {loading && <ActivityIndicator size="large" color={theme.colors.primary} />}
 
-          <Button
+          <AppButton
             title={loading ? "Logowanie…" : "Zaloguj się"}
             onPress={handleLogin}
             disabled={loading}
@@ -117,7 +135,7 @@ export default function LoginScreen({ onLogin }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -132,13 +150,14 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
+    color: theme.colors.text,
   },
   subtitle: {
     fontSize: 16,
     textAlign: "center",
     marginTop: 8,
     marginBottom: 32,
-    color: "#475569",
+    color: theme.colors.muted,
   },
   form: {
     gap: 12,
@@ -146,17 +165,19 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
+    color: theme.colors.text,
   },
   input: {
+    backgroundColor: theme.colors.surface,
     borderWidth: 1,
-    borderColor: "#94a3b8",
+    borderColor: theme.colors.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    color: "#0f172a",
+    color: theme.colors.text,
   },
   error: {
-    color: "#b91c1c",
+    color: theme.colors.danger,
     fontSize: 16,
   },
 });

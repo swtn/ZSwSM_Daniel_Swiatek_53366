@@ -1,10 +1,10 @@
+import { Text } from "../i18n/LanguageProvider.js";
 import {
   ActivityIndicator,
   Pressable,
   StyleSheet,
-  Text,
-} from "react-native";
-import { theme } from "../theme/theme.js";
+  } from "react-native";
+import { useTheme, useThemedStyles } from "../theme/ThemeProvider.js";
 
 export default function AppButton({
   title,
@@ -13,12 +13,14 @@ export default function AppButton({
   loading = false,
   variant = "primary",
 }) {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const blocked = disabled || loading;
   const secondary = variant === "secondary";
 
   const foreground = secondary
     ? theme.colors.primary
-    : theme.colors.surface;
+    : theme.colors.onPrimary;
 
   return (
     <Pressable
@@ -47,7 +49,7 @@ export default function AppButton({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   button: {
     minHeight: 52,
     paddingHorizontal: 20,

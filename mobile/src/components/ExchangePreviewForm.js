@@ -1,10 +1,11 @@
+import { decimal } from "../i18n/translations.js";
+import { Text, localizedAlert } from "../i18n/LanguageProvider.js";
+import { t } from "../i18n/translations.js";
 import { useEffect, useRef, useState } from "react";
 import {
-  Alert,
   Keyboard,
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
@@ -14,7 +15,7 @@ import {
   getPendingExchange,
   submitExchange,
 } from "../services/exchange-service.js";
-import { theme } from "../theme/theme.js";
+import { useTheme, useThemedStyles } from "../theme/ThemeProvider.js";
 
 const currencies = ["EUR", "USD", "GBP"];
 
@@ -23,6 +24,8 @@ export default function ExchangePreviewForm({
   onExchanged,
   onBusyChange,
 }) {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [foreignCurrency, setForeignCurrency] = useState("EUR");
   const [buyingForeign, setBuyingForeign] = useState(true);
   const [amount, setAmount] = useState("");
@@ -58,7 +61,7 @@ export default function ExchangePreviewForm({
       setForeignCurrency(
         buying ? saved.input.toCurrency : saved.input.fromCurrency
       );
-      setAmount(saved.input.amount.replace(".", ","));
+      setAmount(decimal(saved.input.amount));
       setPreview(null);
     }
   }
@@ -191,11 +194,11 @@ export default function ExchangePreviewForm({
     setExecuting(true);
     Keyboard.dismiss();
 
-    Alert.alert(
+    localizedAlert(
       "Potwierdź wymianę",
-      `Wymienisz ${acceptedPreview.sourceAmount.replace(".", ",")} `
+      `Wymienisz ${decimal(acceptedPreview.sourceAmount)} `
       + `${acceptedPreview.fromCurrency} na `
-      + `${acceptedPreview.targetAmount.replace(".", ",")} `
+      + `${decimal(acceptedPreview.targetAmount)} `
       + `${acceptedPreview.toCurrency}.`,
       [
         {
@@ -298,11 +301,14 @@ export default function ExchangePreviewForm({
       <Text style={styles.label}>Kwota w {fromCurrency}</Text>
 
       <TextInput
+            placeholderTextColor={theme.colors.muted}
+            selectionColor={theme.colors.primary}
+            keyboardAppearance={theme.dark ? "dark" : "light"}
         style={styles.input}
         value={amount}
         onChangeText={changeAmount}
         keyboardType="decimal-pad"
-        placeholder="np. 50,00"
+        placeholder={t("np. 50,00")}
         editable={!blocked}
       />
 
@@ -326,7 +332,7 @@ export default function ExchangePreviewForm({
           </Text>
 
           <Text style={styles.sourceAmount}>
-            {pending.input.amount.replace(".", ",")}
+            {decimal(pending.input.amount)}
             {" "}{pending.input.fromCurrency}
             {" → "}{pending.input.toCurrency}
           </Text>
@@ -350,19 +356,19 @@ export default function ExchangePreviewForm({
         <View style={styles.previewCard}>
           <Text style={styles.description}>Wymienisz</Text>
           <Text style={styles.sourceAmount}>
-            {preview.sourceAmount.replace(".", ",")}
+            {decimal(preview.sourceAmount)}
             {" "}{preview.fromCurrency}
           </Text>
 
           <Text style={styles.description}>Otrzymasz</Text>
           <Text style={styles.targetAmount}>
-            {preview.targetAmount.replace(".", ",")}
+            {decimal(preview.targetAmount)}
             {" "}{preview.toCurrency}
           </Text>
 
           <Text style={styles.description}>
             Kurs {preview.rateType === "ask" ? "sprzedaży" : "kupna"}:
-            {" "}{preview.exchangeRate.replace(".", ",")} PLN
+            {" "}{decimal(preview.exchangeRate)} PLN
           </Text>
 
           <Text style={styles.description}>
@@ -387,12 +393,12 @@ export default function ExchangePreviewForm({
           <Text style={styles.label}>Wymiana potwierdzona</Text>
 
           <Text style={styles.sourceAmount}>
-            {completed.sourceAmount.replace(".", ",")}
+            {decimal(completed.sourceAmount)}
             {" "}{completed.fromCurrency}
           </Text>
 
           <Text style={styles.targetAmount}>
-            → {completed.targetAmount.replace(".", ",")}
+            → {decimal(completed.targetAmount)}
             {" "}{completed.toCurrency}
           </Text>
 
@@ -405,7 +411,7 @@ export default function ExchangePreviewForm({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     gap: 14,
   },

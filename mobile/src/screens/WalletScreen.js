@@ -1,3 +1,5 @@
+import { decimal } from "../i18n/translations.js";
+import { Text } from "../i18n/LanguageProvider.js";
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
@@ -7,7 +9,6 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -16,10 +17,12 @@ import { Ionicons } from "@expo/vector-icons";
 import DepositForm from "../components/DepositForm.js";
 import AppButton from "../components/AppButton.js";
 import { apiRequest, ApiError } from "../services/api.js";
-import { theme } from "../theme/theme.js";
+import { useTheme, useThemedStyles } from "../theme/ThemeProvider.js";
 import ExchangePreviewForm from "../components/ExchangePreviewForm.js";
 
 export default function WalletScreen({ session }) {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -124,7 +127,7 @@ export default function WalletScreen({ session }) {
           </View>
         )}
 
-        {loading && !wallet && <ActivityIndicator size="large" />}
+        {loading && !wallet && <ActivityIndicator size="large" color={theme.colors.primary} />}
 
         {wallet?.balances.map((balance) => {
           const primary = balance.currency === "PLN";
@@ -143,22 +146,22 @@ export default function WalletScreen({ session }) {
                 </Text>
               </View>
               <Text style={[styles.amount, primary && styles.lightText]}>
-                {balance.amount.replace(".", ",")}
+                {decimal(balance.amount)}
               </Text>
             </View>
           );
         })}
 
-        <AppButton
-          title="Wymień walutę"
-          onPress={() => setExchangeModalVisible(true)}
-        />
-
-        <AppButton
-          title="Zasil portfel"
-          variant="secondary"
-          onPress={() => setDepositModalVisible(true)}
-        />
+        <View style={styles.actions}>
+          <View style={styles.action}>
+            <AppButton title="Wymień walutę"
+              onPress={() => setExchangeModalVisible(true)} />
+          </View>
+          <View style={styles.action}>
+            <AppButton title="Zasil portfel" variant="secondary"
+              onPress={() => setDepositModalVisible(true)} />
+          </View>
+        </View>
 
       </ScrollView>
 
@@ -241,7 +244,7 @@ export default function WalletScreen({ session }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -252,6 +255,8 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingBottom: 16,
   },
+  actions: { flexDirection: "row", gap: 10, alignItems: "stretch" },
+  action: { flex: 1 },
   heading: {
     flexDirection: "row",
     alignItems: "center",
@@ -298,8 +303,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   primaryCard: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.heroBackground,
+    borderColor: theme.colors.heroBackground,
   },
   currency: {
     fontSize: 18,
@@ -318,10 +323,10 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   lightText: {
-    color: "#FFFFFF",
+    color: theme.colors.onHero,
   },
   primaryMuted: {
-    color: "#DBEAFE",
+    color: theme.colors.heroMuted,
   },
   errorCard: {
     backgroundColor: theme.colors.surface,

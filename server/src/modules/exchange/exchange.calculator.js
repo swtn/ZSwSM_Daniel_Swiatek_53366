@@ -63,26 +63,16 @@ export function calculateExchange({
   ).toDecimalPlaces(2, Money.ROUND_HALF_UP);
 
   if (targetAmount.isZero()) {
-    throw new Error("Kwota wymiany jest zbyt mała.");
+    const error = new Error("Kwota wymiany jest zbyt mała.");
+    error.code = "EXCHANGE_AMOUNT_TOO_SMALL";
+    throw error;
   }
 
   if (targetAmount.gt(maxAmount)) {
-    throw new Error("Kwota wynikowa przekracza dopuszczalny zakres.");
+    const error = new Error("Kwota wynikowa przekracza dopuszczalny zakres.");
+    error.code = "EXCHANGE_AMOUNT_TOO_LARGE";
+    throw error;
   }
-
-  if (targetAmount.isZero()) {
-  const error = new Error("Kwota wymiany jest zbyt mała.");
-  error.code = "EXCHANGE_AMOUNT_TOO_SMALL";
-  throw error;
-}
-
-if (targetAmount.gt(maxAmount)) {
-  const error = new Error(
-    "Kwota wynikowa przekracza dopuszczalny zakres."
-  );
-  error.code = "EXCHANGE_AMOUNT_TOO_LARGE";
-  throw error;
-}
   return {
     fromCurrency,
     toCurrency,

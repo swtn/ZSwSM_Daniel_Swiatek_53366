@@ -1,15 +1,18 @@
+import { decimal } from "../i18n/translations.js";
+import { Text } from "../i18n/LanguageProvider.js";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { apiRequest } from "../services/api.js";
 import AppButton from "./AppButton.js";
-import { theme } from "../theme/theme.js";
+import { useTheme, useThemedStyles } from "../theme/ThemeProvider.js";
 
 export default function RatesPanel({ token }) {
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [table, setTable] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -34,7 +37,7 @@ export default function RatesPanel({ token }) {
 
   return (
     <View style={styles.container}>
-      {loading && <ActivityIndicator size="large" />}
+      {loading && <ActivityIndicator size="large" color={theme.colors.primary} />}
 
       {error !== "" && (
         <Text style={styles.error} accessibilityRole="alert">
@@ -66,11 +69,11 @@ export default function RatesPanel({ token }) {
               <View style={styles.rateRow}>
                 <View style={styles.rateColumn}>
                   <Text style={styles.description}>Kupno</Text>
-                  <Text style={styles.rate}>{rate.bid.replace(".", ",")}</Text>
+                  <Text style={styles.rate}>{decimal(rate.bid)}</Text>
                 </View>
                 <View style={styles.rateColumn}>
                   <Text style={styles.description}>Sprzedaż</Text>
-                  <Text style={styles.rate}>{rate.ask.replace(".", ",")}</Text>
+                  <Text style={styles.rate}>{decimal(rate.ask)}</Text>
                 </View>
               </View>
             </View>
@@ -92,7 +95,7 @@ export default function RatesPanel({ token }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     gap: 10,
   },
@@ -108,6 +111,7 @@ const styles = StyleSheet.create({
   currency: {
     fontSize: 20,
     fontWeight: "bold",
+    color: theme.colors.text,
   },
   cardHeading: {
     flexDirection: "row",
@@ -135,10 +139,10 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: "#475569",
+    color: theme.colors.muted,
   },
   error: {
     fontSize: 16,
-    color: "#b91c1c",
+    color: theme.colors.danger,
   },
 });

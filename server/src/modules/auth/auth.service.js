@@ -1,8 +1,9 @@
 import argon2 from "argon2";
+import { mapUser } from "../users/users.service.js";
 import { pool } from "../../db/pool.js";
 import { randomBytes, createHash } from "node:crypto";
 
-export async function registerUser({ email, password }) {
+export async function registerUser({ email, password, firstName, lastName }) {
   const passwordHash = await argon2.hash(password, {
     type: argon2.argon2id,
   });
@@ -14,10 +15,10 @@ export async function registerUser({ email, password }) {
     await client.query("BEGIN");
 
     const { rows: [user] } = await client.query(
-      `INSERT INTO uzytkownicy (email, skrot_hasla)
-       VALUES ($1, $2)
-       RETURNING id, email, data_utworzenia`,
-      [email, passwordHash],
+      `INSERT INTO uzytkownicy (email, skrot_hasla, imie, nazwisko)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, email, imie, nazwisko, data_utworzenia`,
+      [email, passwordHash, firstName, lastName],
     );
 
     const { rows: [wallet] } = await client.query(
@@ -40,7 +41,7 @@ export async function registerUser({ email, password }) {
     }
 
     await client.query("COMMIT");
-    return user;
+    return mapUser(user);
   } catch (error) {
     try {
       await client.query("ROLLBACK");
@@ -54,51 +55,29 @@ export async function registerUser({ email, password }) {
   }
 }
 export async function loginUser({ email, password }) {
-  const { rows: [user] } = await pool.query(
-    `SELECT id, email, skrot_hasla
-     FROM uzytkownicy
-     WHERE email = $1`,
-    [email],
-  );
-
-  if (!user) {
-    return null;
-  }
-
-  const passwordMatches = await argon2.verify(
-    user.skrot_hasla,
-    password,
-  );
-
-  if (!passwordMatches) {
-    return null;
-  }
-
-  const token = randomBytes(32).toString("hex");
-
-  const tokenHash = createHash("sha256")
-    .update(token)
-    .digest("hex");
-
-  const { rows: [session] } = await pool.query(
-    `INSERT INTO sesje (
-       uzytkownik_id,
-       skrot_tokenu,
-       data_wygasniecia
-     )
-     VALUES ($1, $2, NOW() + INTERVAL '24 hours')
-     RETURNING data_wygasniecia`,
-    [user.id, tokenHash],
-  );
-
-  return {
-    token,
-    expiresAt: session.data_wygasniecia,
-    user: {
-      id: user.id,
-      email: user.email,
-    },
-  };
+  const client = await pool.connect();
+  let releaseError;
+  try {
+    await client.query("BEGIN");
+    const { rows: [user] } = await client.query(
+      `SELECT id, email, imie, nazwisko, data_utworzenia, skrot_hasla
+       FROM uzytkownicy WHERE email = $1 FOR UPDATE`, [email]);
+    if (!user || !await argon2.verify(user.skrot_hasla, password)) {
+      await client.query("COMMIT");
+      return null;
+    }
+    const token = randomBytes(32).toString("hex");
+    const tokenHash = createHash("sha256").update(token).digest("hex");
+    const { rows: [session] } = await client.query(
+      `INSERT INTO sesje (uzytkownik_id, skrot_tokenu, data_wygasniecia)
+       VALUES ($1, $2, NOW() + INTERVAL '24 hours') RETURNING data_wygasniecia`,
+      [user.id, tokenHash]);
+    await client.query("COMMIT");
+    return { token, expiresAt: session.data_wygasniecia, user: mapUser(user) };
+  } catch (error) {
+    try { await client.query("ROLLBACK"); } catch (rollbackError) { releaseError = rollbackError; }
+    throw error;
+  } finally { client.release(releaseError); }
 }
 
 export async function logoutUser(sessionId) {

@@ -1,9 +1,8 @@
+import { Text, LanguageProvider, useLanguage } from "./src/i18n/LanguageProvider.js";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Button,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -14,13 +13,25 @@ import {
   removeToken,
 } from "./src/services/token-storage.js";
 import MainTabs from "./src/navigation/MainTabs.js";
+import RegisterScreen from "./src/screens/RegisterScreen.js";
+import AppButton from "./src/components/AppButton.js";
+import { ThemeProvider, useTheme, useThemedStyles } from "./src/theme/ThemeProvider.js";
 
 export default function App() {
+  return <LanguageProvider><ThemeProvider><AppContent /></ThemeProvider></LanguageProvider>;
+}
+
+function AppContent() {
+  useLanguage();
+  const { theme } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [session, setSession] = useState(null);
   const [checkingSession, setCheckingSession] = useState(true);
   const [startupError, setStartupError] = useState("");
   const [logoutLoading, setLogoutLoading] = useState(false);
   const [logoutError, setLogoutError] = useState("");
+  const [showRegistration, setShowRegistration] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   useEffect(() => {
     restoreSession();
@@ -96,8 +107,8 @@ export default function App() {
   if (checkingSession) {
     content = (
       <View style={styles.container}>
-        <ActivityIndicator size="large" />
-        <Text>Sprawdzanie sesji…</Text>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <Text style={{ color: theme.colors.text }}>Sprawdzanie sesji…</Text>
       </View>
     );
   } else if (startupError) {
@@ -105,7 +116,7 @@ export default function App() {
       <View style={styles.container}>
         <Text style={styles.title}>Nie można sprawdzić sesji</Text>
         <Text style={styles.error}>{startupError}</Text>
-        <Button
+        <AppButton
           title="Spróbuj ponownie"
           onPress={restoreSession}
         />
@@ -115,14 +126,32 @@ export default function App() {
     content = (
       <MainTabs
         session={session}
+        onSignedOut={async () => { await removeToken(); setSession(null); }}
+        onUserUpdated={(user) => {
+          setSession((current) => current && current.user.id === user.id
+            ? { ...current, user }
+            : current);
+        }}
         onLogout={handleLogout}
         logoutLoading={logoutLoading}
         logoutError={logoutError}
       />
     );
+  } else if (showRegistration) {
+  content = (
+    <RegisterScreen
+      onBack={() => setShowRegistration(false)}
+      onRegistered={(email) => {
+        setRegisteredEmail(email);
+        setShowRegistration(false);
+      }}
+    />
+  );
   } else {
     content = (
       <LoginScreen
+        initialEmail={registeredEmail}
+        onRegister={() => setShowRegistration(true)}
         onLogin={(newSession) => {
           setLogoutError("");
           setSession(newSession);
@@ -133,31 +162,32 @@ export default function App() {
 
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style={theme.dark ? "light" : "dark"} />
       {content}
     </>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 24,
-    backgroundColor: "#ffffff",
+    backgroundColor: theme.colors.background,
     gap: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    color: theme.colors.text,
     textAlign: "center",
   },
   email: {
     fontSize: 16,
   },
   error: {
-    color: "#b91c1c",
+    color: theme.colors.danger,
     fontSize: 16,
     textAlign: "center",
   },
